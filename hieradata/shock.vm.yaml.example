@@ -1,0 +1,11 @@
+blogs:
+  - domain:     www.site1.com
+    dbuser:     site1
+    dbpassword: funkbunny1
+    adminuser:  jaxon
+  - domain:     site2.com
+    dbuser:     site2
+    dbpassword: funkbunny2
+    adminuser:  morgajel
+mysql:
+    rootpassword: foobarbaz
