@@ -1,1 +1,2 @@
-hieradata/*.yaml
+manifests/hieradata/*.yaml
+.vagrant*
