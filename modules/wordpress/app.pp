@@ -1,5 +1,4 @@
 define wordpress::app (
-  $domain,
   $install_dir,
   $install_url,
   $version,
@@ -9,8 +8,10 @@ define wordpress::app (
   $db_password,
   $wp_owner,
   $wp_group,
+  $wp_lang,
+  $wp_plugin_dir,
 ) {
-  validate_string($domain,$install_dir,$install_url,$version,$db_name,$db_host,$db_user,$db_password,$wp_owner,$wp_group)
+  validate_string($install_dir,$install_url,$version,$db_name,$db_host,$db_user,$db_password,$wp_owner,$wp_group, $wp_lang, $wp_plugin_dir)
 
   ## Resource defaults
   File {
@@ -26,21 +27,19 @@ define wordpress::app (
     group     => $wp_group,
   }
 
-
   ## Installation directory
   file { $install_dir:
     ensure  => directory,
     recurse => true,
   }
 
-
   ## Download and extract
-  exec { "$domain Download wordpress":
+  exec { "Download wordpress for $name":
     command => "wget ${install_url}/wordpress-${version}.tar.gz",
     creates => "${install_dir}/wordpress-${version}.tar.gz",
     require => File[$install_dir],
   }
-  -> exec { "$domain Extract wordpress":
+  -> exec { "Extract wordpress for $name":
     command => "tar zxvf ./wordpress-${version}.tar.gz --strip-components=1",
     creates => "${install_dir}/index.php",
   }
@@ -48,27 +47,26 @@ define wordpress::app (
   ## Configure wordpress
   #
   # Template uses no variables
-  file { "${domain} ${install_dir}/wp-keysalts.php":
+  file { "${install_dir}/wp-keysalts.php":
     ensure  => present,
-    path    => "${install_dir}/wp-keysalts.php",
     content => template('wordpress/wp-keysalts.php.erb'),
     replace => false,
-    require => Exec["$domain Extract wordpress"],
+    require => Exec['Extract wordpress'],
   }
   concat { "${install_dir}/wp-config.php":
     owner   => $wp_owner,
     group   => $wp_group,
     mode    => '0755',
-    require => Exec["$domain Extract wordpress"],
+    require => Exec['Extract wordpress'],
   }
-  concat::fragment { "$domain wp-config.php keysalts":
+  concat::fragment { "wp-config.php keysalts for $name":
     target  => "${install_dir}/wp-config.php",
     source  => "${install_dir}/wp-keysalts.php",
     order   => '10',
-    require => File["$domain ${install_dir}/wp-keysalts.php"],
+    require => File["${install_dir}/wp-keysalts.php"],
   }
   # Template uses: $db_name, $db_user, $db_password, $db_host
-  concat::fragment { "$domain wp-config.php body":
+  concat::fragment { "wp-config.php body for $name":
     target  => "${install_dir}/wp-config.php",
     content => template('wordpress/wp-config.php.erb'),
     order   => '20',
