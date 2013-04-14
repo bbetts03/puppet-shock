@@ -7,4 +7,9 @@ class shock::packages {
   package{ 'wget':
     ensure  =>present,
   }
+
+  package{ 'php-cli':
+    ensure  =>present,
+  }
+
 }

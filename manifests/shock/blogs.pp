@@ -1,7 +1,6 @@
 
 class shock::blogs {
 
-
   $blogs=hiera('blogs')
   
   blog{$blogs: }
@@ -15,6 +14,7 @@ class shock::blogs {
     $domain     = $name['domain']
     $adminuser  = $name['adminuser']
     $dbuser     = $name['dbuser']
+    $dbname     = $name['dbname']
     $dbpassword = $name['dbpassword']
   
       file {"/var/www/${domain}" :
@@ -30,12 +30,10 @@ class shock::blogs {
       db_user         => $dbuser, 
       db_name         => $dbname, 
       db_password     => $dbpassword, 
+      notify =>Service['nginx'],
     }
-    #nginx::vhost { "${domain} vhost":
-    #  ensure   => present,
-    #  www_root => "/var/www/${domain}/docs/",
-    #}
-  
+    nginx::vhost { "${domain} vhost":
+      domain    => $domain,
+    }
   }
-  
 }

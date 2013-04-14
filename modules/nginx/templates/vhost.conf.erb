@@ -1,0 +1,23 @@
+#
+
+server {
+  listen          80;
+  server_name     *.<%=@domain%>;
+  access_log      /var/log/nginx/<%=@domain%>.access_log  main;
+  error_log       /var/log/nginx/<%=@domain%>.error_log   warn;
+  rewrite ^       http://<%=@domain%>$request_uri? permanent;
+ }
+
+server {
+  listen          80 ;
+  server_name     <%=@domain%>;
+  access_log      /var/log/nginx/<%=@domain%>.access_log  main;
+  error_log       /var/log/nginx/<%=@domain%>.error_log   warn;
+
+  index           index.php;
+  root            /var/www/<%=@domain%>/docs/;
+
+  include /etc/nginx/wordpress_locations.conf;
+
+}
+

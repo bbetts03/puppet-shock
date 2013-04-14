@@ -8,6 +8,9 @@ class shock {
   }
 
   include nginx
+  include phpfpm
+  include iptables
+  include selinux
 
 
 }

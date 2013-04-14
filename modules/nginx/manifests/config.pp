@@ -8,6 +8,15 @@ class nginx::config {
         require => Class["nginx::install"],
         notify => Class["nginx::service"],
     }
+    file { "/etc/nginx/wordpress_locations.conf":
+        ensure => present,
+        owner => 'root',
+        group => 'root',
+        mode => 0444,
+        source => "puppet:///modules/nginx/wordpress_locations.conf",
+        require => Class["nginx::install"],
+        notify => Class["nginx::service"],
+    }
     file { "/etc/nginx/sites/":
         ensure=>directory,
         require=>Package['nginx'],
