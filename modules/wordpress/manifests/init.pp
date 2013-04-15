@@ -71,5 +71,11 @@ define wordpress (
     wp_owner    => $wp_owner,
     wp_group    => $wp_group,
   }
+  wordpress::db { "$domain db":
+    db_name     => $db_name,
+    db_host     => $db_host,
+    db_user     => $db_user,
+    db_password => $db_password,
+  }
 }
 

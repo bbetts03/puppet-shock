@@ -35,5 +35,11 @@ class shock::blogs {
     nginx::vhost { "${domain} vhost":
       domain    => $domain,
     }
+    awstats::config { "$domain awstats":
+      domain    => $domain,
+      skiphosts => "127.0.0.1 24.192.7.135",
+      domain_alias => "www.${domain}",
+      skipfiles => "/wp-content/plugins/wp-minify/min/ /wp-admin/admin-ajax.php /wp-content/themes/new-arthemia/scripts/timthumb.php",
+    }
   }
 }

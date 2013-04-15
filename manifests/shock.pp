@@ -11,7 +11,7 @@ class shock {
   include phpfpm
   include iptables
   include selinux
-
+  include awstats
 
 }
 
